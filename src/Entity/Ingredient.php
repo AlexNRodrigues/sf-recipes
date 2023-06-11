@@ -33,11 +33,11 @@ class Ingredient
 
     #[ORM\Column]
     #[Assert\NotNull]
-    private ?\DateTimeImmutable $creteAt = null;
+    private ?\DateTimeImmutable $createdAt = null;
 
     public function __construct()
     {
-        $this->creteAt = new \DateTimeImmutable();
+        $this->createdAt = new \DateTimeImmutable();
     }
 
     public function getId(): ?int
@@ -69,14 +69,14 @@ class Ingredient
         return $this;
     }
 
-    public function getCreteAt(): ?\DateTimeImmutable
+    public function getcreatedAt(): ?\DateTimeImmutable
     {
-        return $this->creteAt;
+        return $this->createdAt;
     }
 
-    public function setCreteAt(\DateTimeImmutable $creteAt): static
+    public function setcreatedAt(\DateTimeImmutable $createdAt): static
     {
-        $this->creteAt = $creteAt;
+        $this->createdAt = $createdAt;
 
         return $this;
     }
