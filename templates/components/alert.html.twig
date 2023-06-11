@@ -1,0 +1,20 @@
+{% for label, messages in app.flashes(['success', 'warning', 'error']) %}
+    {% for message in messages %}
+        <div aria-live="polite" aria-atomic="true" class="position-relative">
+            <div class="toast-container top-0 end-0 p-3">
+
+                <div class="toast fade show" role="alert" aria-live="assertive" aria-atomic="true">
+                    <div class="toast-header bg-{{label}}-subtle">
+                        <strong class="me-auto">
+                            {{ label }}
+                        </strong>
+                        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
+                    <div class="toast-body bg-{{label}}-subtle">
+                        {{ message }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+{% endfor %}

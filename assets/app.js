@@ -9,3 +9,19 @@
 import './styles/app.scss';
 
 require('bootstrap');
+
+const SimpleMaskMoney = require('simple-mask-money');
+
+const options = {
+	allowNegative: false,
+	negativeSignAfter: false,
+	prefix: '',
+	suffix: '',
+	fixed: true,
+	fractionDigits: 2,
+	decimalSeparator: ',',
+	thousandsSeparator: '.',
+	cursor: 'move'
+};
+
+let input = SimpleMaskMoney.setMask('input.price', options);

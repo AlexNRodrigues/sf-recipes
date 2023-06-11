@@ -16,6 +16,11 @@
         {% block header %}
             {% include "partials/_header.html.twig" %}
         {% endblock %}
+
+        {% block alert %}
+            {% include "components/alert.html.twig" %}
+        {% endblock %}
+
         {% block body %}{% endblock %}
     </body>
 </html>
