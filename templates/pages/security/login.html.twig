@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="container">
+        <h1 class="mt-4">Login</h1>
+
+        <div class="d-flex justify-content-center">
+            {% if error %}
+                <div class="bs-component mt-4">
+                    {{ error.messageKey|trans(error.messageData, 'security') }}
+                </div>
+            {% endif %}
+
+            <form action="{{ path('security_login') }}" method="post" class="w-50">
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+                <div class="form-group">
+                    <label for="username" class="form-label mt-4">Email:</label>
+                    <input type="text" id="username" name="_username" value="{{ last_username }}" class="form-control">
+                </div>
+
+                <div class="form-group">
+                    <label for="password" class="form-label mt-4">Password:</label>
+                    <input type="password" id="password" name="_password" class="form-control">
+                </div>
+
+                {# If you want to control the URL the user is redirected to on success
+                <input type="hidden" name="_target_path" value="/account"> #}
+
+                <button type="submit" class="btn btn-primary mt-4">login</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}
