@@ -11,8 +11,12 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+// use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 #[Route('/ingredient', name: 'ingredient')]
+#[IsGranted('ROLE_USER')]
 class IngredientController extends AbstractController
 {
 
@@ -20,7 +24,7 @@ class IngredientController extends AbstractController
     public function index(IngredientRepository $ingredientRepository, PaginatorInterface $paginator, Request $request): Response
     {
         $ingredients = $paginator->paginate(
-            $ingredientRepository->findAll(),
+            $ingredientRepository->findBy(['user' => $this->getUser()]),
             $request->query->getInt('page', 1),
             10
         );
@@ -39,6 +43,7 @@ class IngredientController extends AbstractController
 
         if($form->isSubmitted() && $form->isValid()) {
             $ingredient = $form->getData();
+            $ingredient->setUser($this->getUser());
 
             $em->persist($ingredient);
             $em->flush();
@@ -53,6 +58,7 @@ class IngredientController extends AbstractController
     }
 
     #[Route('/edit/{id<\d+>}', name:'_edit', methods:['GET', 'POST'])]
+    #[Security("is_granted('ROLE_USER') and user === ingredient.getUser()")]
     public function edit(Ingredient $ingredient, Request $request, EntityManagerInterface $em): Response {
 
         $form = $this->createForm(IngredientType::class, $ingredient);
@@ -74,6 +80,7 @@ class IngredientController extends AbstractController
     }
 
     #[Route('/delete/{id<\d+>}', name:'_delete', methods:['POST'])]
+    #[Security("is_granted('ROLE_USER') and user === ingredient.getUser()")]
     public function delete(Request $request, Ingredient $ingredient, IngredientRepository $ingredientRepository): Response {
 
         if ($this->isCsrfTokenValid('delete'.$ingredient->getId(), $request->request->get('_token'))) {

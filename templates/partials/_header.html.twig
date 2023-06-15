@@ -1,29 +1,58 @@
 <nav class="navbar navbar-expand-lg bg-primary" data-bs-theme="dark">
-	<div class="container-fluid">
-		<a class="navbar-brand" href="{{ path('home_index') }}">
-			Navbar
-		</a>
-		<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
-			<span class="navbar-toggler-icon"></span>
-		</button>
-		<div class="collapse navbar-collapse" id="navbarColor01">
-			<ul class="navbar-nav me-auto">
-				<li class="nav-item">
-					<a class="nav-link active" href="{{ path('home_index') }}">
-						Home
-					</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link active" href="{{ path('ingredient_index') }}">
-						Ingredientes
-					</a>
-				</li>
-				<li class="nav-item">
-					<a class="nav-link active" href="{{ path('recipe_index') }}">
-						Receitas
-					</a>
-				</li>
-			</ul>
+	<div class="container">
+		<div class="container-fluid d-flex align-items-center">
+			<a class="navbar-brand" href="{{ path('home_index') }}">
+				Navbar
+			</a>
+			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="navbarColor01">
+				<ul class="navbar-nav me-auto">
+					{% if app.user %}
+						<li class="nav-item">
+							<a class="nav-link active" href="{{ path('ingredient_index') }}">
+								Ingredientes
+							</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link active" href="{{ path('recipe_index') }}">
+								Receitas
+							</a>
+						</li>
+					{% endif %}
+				</ul>
+				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDarkDropdown" aria-controls="navbarNavDarkDropdown" aria-expanded="false" aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+				<div class="collapse navbar-collapse justify-content-end">
+					<ul class="navbar-nav">
+						{% if app.user %}
+
+							<li class="nav-item dropdown">
+
+								<button class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+									{{ app.user.nickname }}
+								</button>
+								<ul class="dropdown-menu dropdown-menu-dark">
+									<li><a class="dropdown-item" href="{{ path('user_edit', {id: app.user.id}) }}">Editar Informações</a></li>
+									<li><a class="dropdown-item" href="{{ path('user_change_password', {id: app.user.id}) }}">Editar senha</a></li>
+									<li><hr class="dropdown-divider"></li>
+									<li><a class="dropdown-item" href="{{ path('security_logout') }}">Sair</a></li>
+								</ul>
+							</li>
+						{% else %}
+							<li class="nav-item">
+								<a href="{{ path('security_login') }}" class="nav-link">Login</a>
+							</li>
+							<li class="nav-item">
+								<a href="{{ path('security_registration') }}" class="nav-link">Criar cadastro</a>
+							</li>
+						{% endif %}
+
+					</ul>
+				</div>
+			</div>
 		</div>
 	</div>
 </nav>

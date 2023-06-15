@@ -11,15 +11,19 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+// use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 
 #[Route('/recipe', name: 'recipe')]
+#[IsGranted('ROLE_USER')]
 class RecipeController extends AbstractController
 {
     #[Route('/', name: '_index', methods:['GET'])]
     public function index(RecipeRepository $recipeRepository, PaginatorInterface $paginator, Request $request): Response
     {
         $recipes = $paginator->paginate(
-            $recipeRepository->findAll(),
+            $recipeRepository->findBy(['user' => $this->getUser()]),
             $request->query->getInt('page', 1),
             10
         );
@@ -38,6 +42,7 @@ class RecipeController extends AbstractController
 
         if($form->isSubmitted() && $form->isValid()) {
             $recipe = $form->getData();
+            $recipe->setUser($this->getUser());
 
             $em->persist($recipe);
             $em->flush();
@@ -52,6 +57,7 @@ class RecipeController extends AbstractController
     }
 
     #[Route('/edit/{id<\d+>}', name:'_edit', methods:['GET', 'POST'])]
+    #[Security("is_granted('ROLE_USER') and user === recipe.getUser()")]
     public function edit(Recipe $recipe, Request $request, EntityManagerInterface $em): Response {
 
         $form = $this->createForm(RecipeType::class, $recipe);
@@ -73,6 +79,7 @@ class RecipeController extends AbstractController
     }
 
     #[Route('/delete/{id<\d+>}', name:'_delete', methods:['POST'])]
+    #[Security("is_granted('ROLE_USER') and user === recipe.getUser()")]
     public function delete(Request $request, Recipe $recipe, RecipeRepository $recipeRepository): Response {
 
         if ($this->isCsrfTokenValid('delete'.$recipe->getId(), $request->request->get('_token'))) {
