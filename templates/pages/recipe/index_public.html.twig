@@ -1,26 +1,20 @@
 {% extends "base.html.twig" %}
 
-{% block body %}
+{% block base %}
+     <div class="container">
+        <h1 class="mt-4">Receitas da comunidade</h1>
 
-	<div class="container my-5">
-		<div class="p-5 text-center bg-body-tertiary rounded-3">
-			<h1 class="text-body-emphasis">
-				Welcome To The Mato
-			</h1>
-			<p class="col-lg-8 mx-auto fs-5 text-muted">
-				Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec hendrerit, quam sed pulvinar facilisis, enim metus hendrerit felis, sed mattis nisi nulla nec dolor. Duis id augue lectus.
-			</p>
-			<div class="d-inline-flex gap-2 mb-5">
-				<button class="d-inline-flex align-items-center btn btn-primary btn-lg px-4 rounded-pill" type="button">
-					Inscription
-				</button>
-			</div>
-		</div>
-	</div>
+        <div class="d-flex justify-content-end">
+            <a href="{{ path('recipe_new') }}" class="btn btn-primary">Nova Receita</a>
+        </div>
 
-	<div class="container text-center">
-		<h2 class="mt-4">Receitas da comunidade</h2>
-		<div class="row">
+        <div class="count d-flex justify-content-end mt-4">
+            <h4>
+                {{ recipes|length > 0 ? recipes.getTotalItemCount : "0" }} receitas ao total
+            </h4>
+        </div>
+
+        <div class="row">
 
             {% for recipe in recipes %}
 
@@ -42,6 +36,12 @@
                 </div>asdasd
             {% endfor %}
         </div>
-	</div>
 
+        <div class="navigation d-flex justify-content-center">
+            {% if recipes|length > 0 %}
+                {{ knp_pagination_render(recipes) }}
+            {% endif %}
+        </div>
+
+    </div>
 {% endblock %}

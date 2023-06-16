@@ -1,0 +1,53 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+
+    <div class="container">
+        <h1 class="mt-4">{{ recipe.name }}</h1>
+        <span class="badge bg-primary">Criado em {{ recipe.createdAt|date('d/m/Y') }}</span>
+
+        <ul class="list-group list-group-flush mt-4">
+            <li class="list-group-item">
+                {% if recipe.time %}
+                    Tempo (em minutos): {{ recipe.time }}
+                {% else %}
+                    Tempo (em minutos) não definido
+                {% endif %}
+            </li>
+            <li class="list-group-item">
+                {% if recipe.nbPeople %}
+                    Para: {{ recipe.nbPeople }} pessoas
+                {% else %}
+                    Quantidade de pessoas não definidas
+                {% endif %}
+            </li>
+            <li class="list-group-item">
+                {% if recipe.difficulty %}
+                    Dificuldade: {{ recipe.difficulty }}
+                {% else %}
+                    Dificuldade não definida
+                {% endif %}
+            </li>
+            <li class="list-group-item">
+                {% if recipe.price %}
+                    Valor (R$): {{ recipe.price }}
+                {% else %}
+                    Valor não definido
+                {% endif %}
+            </li>
+        </ul>
+
+        <div>
+            {{ recipe.description|raw }}
+        </div>
+
+        <h4 class="mt-4 text-primary">Ingredientes</h4>
+
+        {% for ingredient in recipe.ingredients %}
+            <span class="badge bg-primary">{{ ingredient.name }}</span>
+        {% endfor %}
+
+
+    </div>
+
+{% endblock %}
