@@ -2,8 +2,11 @@
 
 namespace App\Controller;
 
+use App\Entity\Mark;
 use App\Entity\Recipe;
+use App\Form\MarkType;
 use App\Form\RecipeType;
+use App\Repository\MarkRepository;
 use App\Repository\RecipeRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
@@ -33,17 +36,47 @@ class RecipeController extends AbstractController
         ]);
     }
 
-    #[Route('/show/{id}', name:'_show', methods:['GET'])]
+    #[Route('/show/{id}', name:'_show', methods:['GET', 'POST'])]
     #[Security("is_granted('ROLE_USER') and recipe.isIsPublic() === true")]
-    public function show(Recipe $recipe): Response
+    public function show(Recipe $recipe, Request $request, MarkRepository $markRepository, EntityManagerInterface $em): Response
     {
+        $mark = new Mark();
+
+        $form = $this->createForm(MarkType::class, $mark);
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()) {
+
+            $mark->setUser($this->getUser())
+                ->setRecipe($recipe);
+
+            $existingMark = $markRepository->findOneBy([
+                'user' => $this->getUser(),
+                'recipe' => $recipe
+            ]);
+
+            if(!$existingMark) {
+                $em->persist($mark);
+            } else {
+                $existingMark->setMark(
+                    $form->getData()->getMark()
+                );
+            }
+
+            $em->flush();
+
+            $this->addFlash('success', 'Nota adicionada com sucesso!');
+            return $this->redirectToRoute('recipe_show', ['id' => $recipe->getId()]);
+        }
+
         return $this->render('pages/recipe/show.html.twig', [
             'recipe' => $recipe,
+            'form' => $form->createView()
         ]);
     }
 
     #[Route('/publish', name:'_index_public', methods:['GET'])]
-    public function indexPublic(RecipeRepository $recipeRepository, PaginatorInterface $paginator, Request $request): Response
+    public function indexPublic(RecipeRepository $recipeRepository): Response
     {
 
         return $this->render('pages/recipe/index_public.html.twig', [

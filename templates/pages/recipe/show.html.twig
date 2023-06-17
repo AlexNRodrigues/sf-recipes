@@ -4,6 +4,7 @@
 
     <div class="container">
         <h1 class="mt-4">{{ recipe.name }}</h1>
+        <p>Média de nota da receita {{ recipe.average }} / 5</p>
         <span class="badge bg-primary">Criado em {{ recipe.createdAt|date('d/m/Y') }}</span>
 
         <ul class="list-group list-group-flush mt-4">
@@ -30,7 +31,7 @@
             </li>
             <li class="list-group-item">
                 {% if recipe.price %}
-                    Valor (R$): {{ recipe.price }}
+                    Valor (R$): {{ recipe.price|number_format(2, ',', '.') }}
                 {% else %}
                     Valor não definido
                 {% endif %}
@@ -47,6 +48,10 @@
             <span class="badge bg-primary">{{ ingredient.name }}</span>
         {% endfor %}
 
+
+        <div class="mark">
+            {{ form(form) }}
+        </div>
 
     </div>
 
