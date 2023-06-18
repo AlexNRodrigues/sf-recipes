@@ -5,6 +5,7 @@ namespace App\Form;
 use App\Entity\Ingredient;
 use App\Entity\Recipe;
 use App\Repository\IngredientRepository;
+use ContainerReeTa4x\getVichUploader_Form_Type_ImageService;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Form\AbstractType;
@@ -18,6 +19,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints as Assert;
+use Vich\UploaderBundle\Form\Type\VichImageType;
 
 class RecipeType extends AbstractType
 {
@@ -127,6 +129,14 @@ class RecipeType extends AbstractType
                     'class' => 'form-check-label'
                 ],
                 'constraints' => [
+                ],
+                'required' => false
+            ])
+            ->add('imageFile', VichImageType::class, [
+                'delete_label' => 'Remove file',
+                'label' => 'Foto da receita',
+                'label_attr' => [
+                    'class' => 'for-label mt-4'
                 ],
                 'required' => false
             ])

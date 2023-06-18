@@ -4,6 +4,11 @@
 
     <div class="container">
         <h1 class="mt-4">{{ recipe.name }}</h1>
+
+        <div class="recipe__image">
+            <img src="{{ vich_uploader_asset(recipe, 'imageFile') }}" alt="...">
+        </div>
+
         <p>Média de nota da receita {{ recipe.average }} / 5</p>
         <span class="badge bg-primary">Criado em {{ recipe.createdAt|date('d/m/Y') }}</span>
 
