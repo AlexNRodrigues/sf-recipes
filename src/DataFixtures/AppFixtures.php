@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Contact;
 use App\Entity\Ingredient;
 use App\Entity\Mark;
 use App\Entity\Recipe;
@@ -36,7 +37,6 @@ class AppFixtures extends Fixture
             $users[] = $user;
             $manager->persist($user);
         }
-
 
         // Ingredients
         $ingredients = [];
@@ -81,6 +81,17 @@ class AppFixtures extends Fixture
 
                 $manager->persist($mark);
             }
+        }
+
+        //Contacts
+        for ($i=0; $i < 5; $i++) {
+            $contact = new Contact();
+            $contact->setFullName($this->faker->name())
+                ->setEmail($this->faker->email())
+                ->setSubject('Demand: '. $i + 1)
+                ->setMessage($this->faker->text());
+
+            $manager->persist($contact);
         }
 
         $manager->flush();
