@@ -11,9 +11,9 @@
 				Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec hendrerit, quam sed pulvinar facilisis, enim metus hendrerit felis, sed mattis nisi nulla nec dolor. Duis id augue lectus.
 			</p>
 			<div class="d-inline-flex gap-2 mb-5">
-				<button class="d-inline-flex align-items-center btn btn-primary btn-lg px-4 rounded-pill" type="button">
+				<a href="{{ path('security_registration') }}" class="d-inline-flex align-items-center btn btn-primary btn-lg px-4 rounded-pill" type="button">
 					Inscription
-				</button>
+				</a>
 			</div>
 		</div>
 	</div>
@@ -27,7 +27,9 @@
                 <div class="card border-primary col-12 col-sm-6 col-md-4 col-lg-3 mb-3">
                     <div class="card-header">{{ 'Receita n° ' ~ recipe.id }}</div>
                     <div class="card-body">
-                        <h4 class="card-title">{{ recipe.name }}</h4>
+                        <h4 class="card-title">
+                            <a href="{{ path('recipe_show', {id: recipe.id}) }}">{{ recipe.name }}</a>
+                        </h4>
                         <p class="card-text">
                             {{ recipe.description|slice(0, 100) ~ '...' }}
                         </p>
