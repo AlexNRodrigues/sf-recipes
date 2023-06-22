@@ -1,0 +1,15 @@
+{% apply markdown_to_html %}
+
+    ![Logo Symrecipe ]({{ email.image('@images/symfony.png') }})
+
+    # Contato de {{ contact.fullName }}
+
+    ##  Assunto: {{ contact.subject }}
+
+    >  {{ contact.message|raw }}
+
+
+    De: {{ contact.email }}
+    Para: {{ email.to[0].address }}
+
+{% endapply %}
