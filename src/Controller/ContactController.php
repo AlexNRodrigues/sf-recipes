@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Contact;
 use App\Form\ContactType;
+use App\Service\MailService;
 use Doctrine\ORM\EntityManagerInterface;
 use Karser\Recaptcha3Bundle\Validator\Constraints\Recaptcha3Validator;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
@@ -18,11 +19,9 @@ use Symfony\Component\Routing\Annotation\Route;
 class ContactController extends AbstractController
 {
     #[Route('/', name: '_index', methods:['GET', 'POST'])]
-    public function index(Request $request, EntityManagerInterface $em, MailerInterface $mailer, Recaptcha3Validator $recaptcha3Validator): Response
+    public function index(Request $request, EntityManagerInterface $em, MailService $mailService, Recaptcha3Validator $recaptcha3Validator): Response
     {
         $contact = new Contact();
-
-        // dd($this->getUser());
 
         if($this->getUser()) {
             $contact->setFullName($this->getUser()->getFullName());
@@ -41,18 +40,15 @@ class ContactController extends AbstractController
             $em->flush();
 
             // email
-            $email = (new TemplatedEmail())
-                ->from($contact->getEmail())
-                ->to('admin@symrecipe.com')
-                ->subject($contact->getSubject())
-                ->htmlTemplate('emails/contact.html.twig')
-
-                ->context([
+            $mailService->sendEmail(
+                $contact->getEmail(),
+                $contact->getSubject(),
+                'emails/contact.html.twig',
+                [
                     'contact' => $contact,
                     'score' => $score
-                ]);
-
-            $mailer->send($email);
+                ]
+            );
 
             $this->addFlash('success', 'Mensagem de contato enviada com sucesso!');
             return $this->redirectToRoute('contact_index');
