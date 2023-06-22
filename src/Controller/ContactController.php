@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Contact;
 use App\Form\ContactType;
 use Doctrine\ORM\EntityManagerInterface;
+use Karser\Recaptcha3Bundle\Validator\Constraints\Recaptcha3Validator;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -17,7 +18,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class ContactController extends AbstractController
 {
     #[Route('/', name: '_index', methods:['GET', 'POST'])]
-    public function index(Request $request, EntityManagerInterface $em, MailerInterface $mailer): Response
+    public function index(Request $request, EntityManagerInterface $em, MailerInterface $mailer, Recaptcha3Validator $recaptcha3Validator): Response
     {
         $contact = new Contact();
 
@@ -34,6 +35,8 @@ class ContactController extends AbstractController
         if($formContact->isSubmitted() && $formContact->isValid()) {
             $contact = $formContact->getData();
 
+            $score = $recaptcha3Validator->getLastResponse()->getScore();
+
             $em->persist($contact);
             $em->flush();
 
@@ -46,6 +49,7 @@ class ContactController extends AbstractController
 
                 ->context([
                     'contact' => $contact,
+                    'score' => $score
                 ]);
 
             $mailer->send($email);

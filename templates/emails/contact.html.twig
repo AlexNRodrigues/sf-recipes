@@ -8,8 +8,9 @@
 
     >  {{ contact.message|raw }}
 
-
-    De: {{ contact.email }}
-    Para: {{ email.to[0].address }}
+    |Score| {{ score }} |
+    |--|--|
+    | De | {{ contact.email }} |
+    | Para |  {{ email.to[0].address }} |
 
 {% endapply %}
